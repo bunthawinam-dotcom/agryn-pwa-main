@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+:root {
+  --agryn-green: #15803d;
+  --agryn-green-light: #16a34a;
+  --agryn-bg: #f0fdf4;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Noto Sans Thai', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--agryn-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Respect device safe areas on installed PWA */
+.agryn-safe-top {
+  padding-top: env(safe-area-inset-top, 0);
+}
