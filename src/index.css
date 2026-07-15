@@ -1,9 +1,18 @@
 @import 'tailwindcss';
 
+/* Enables `dark:` utility classes whenever the <html> tag has class="dark",
+   instead of only following the OS-level prefers-color-scheme setting.
+   This is what lets our sun/moon Switch control the whole app. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --agryn-green: #15803d;
   --agryn-green-light: #16a34a;
   --agryn-bg: #f0fdf4;
+}
+
+html.dark {
+  --agryn-bg: #0f172a;
 }
 
 html,
@@ -18,6 +27,7 @@ body {
   background: var(--agryn-bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.2s ease;
 }
 
 /* Respect device safe areas on installed PWA */

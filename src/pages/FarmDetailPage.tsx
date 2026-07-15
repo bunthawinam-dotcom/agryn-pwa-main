@@ -5,7 +5,7 @@ import {
   ArrowLeftOutlined,
   ExclamationCircleFilled,
 } from '@ant-design/icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useFarmStore } from '@app/store/farmStore';
 import { getCrop } from '@app/config/crops';
 import { useI18n } from '@app/hooks/useI18n';
@@ -15,6 +15,12 @@ import { MetricSnapshot } from '@app/components/MetricSnapshot';
 import { TreeCard } from '@app/components/TreeCard';
 import { TreeFormModal } from '@app/components/TreeFormModal';
 import type { Tree, TreeInput } from '@app/types/farm';
+
+type FarmTabKey = 'trees' | 'overview';
+
+function isFarmTabKey(value: string | null): value is FarmTabKey {
+  return value === 'trees' || value === 'overview';
+}
 
 export function FarmDetailPage() {
   const { farmId = '' } = useParams();
@@ -35,6 +41,18 @@ export function FarmDetailPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Tree | null>(null);
+
+  // Remember which tab (trees / overview) is active via the URL, e.g.
+  // "/farms/seed-durian?tab=overview" — this is what lets AppLayout's
+  // bottom-nav "farms" tab restore the exact tab the user was on.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab: FarmTabKey = isFarmTabKey(searchParams.get('tab'))
+    ? (searchParams.get('tab') as FarmTabKey)
+    : 'trees';
+
+  const handleTabChange = (key: string) => {
+    setSearchParams({ tab: key }, { replace: true });
+  };
 
   if (!farm) {
     return (
@@ -119,10 +137,10 @@ export function FarmDetailPage() {
           {crop.stages.map((stage) => (
             <div
               key={stage.key}
-              className="flex items-center gap-2 rounded-full border border-green-100 bg-green-50 px-3 py-1.5 text-sm"
+              className="flex items-center gap-2 rounded-full border border-green-100 bg-green-50 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-800"
             >
               <span>{stage.icon}</span>
-              <span className="font-medium text-green-800">{t(stage.name)}</span>
+              <span className="font-medium text-green-800 dark:text-green-400">{t(stage.name)}</span>
               <span className="text-xs text-gray-400">{stage.durationDays}d</span>
             </div>
           ))}
@@ -149,6 +167,8 @@ export function FarmDetailPage() {
       </div>
 
       <Tabs
+        activeKey={activeTab}
+        onChange={handleTabChange}
         items={[
           { key: 'trees', label: L('ต้นไม้', 'Trees'), children: treesTab },
           { key: 'overview', label: L('ภาพรวม', 'Overview'), children: overviewTab },

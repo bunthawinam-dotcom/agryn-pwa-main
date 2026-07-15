@@ -22,6 +22,8 @@ export interface Tree {
   holeNumber: number;
   /** Variety key from the farm crop's `varieties` list. */
   variety: string;
+  /** Optional photo of the tree, stored as a base64 data URL (MVP: no backend upload yet). */
+  photoUrl?: string;
 }
 
 /** Payload for creating/updating a farm (no server-managed fields). */

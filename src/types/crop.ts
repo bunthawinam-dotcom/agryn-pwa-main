@@ -33,6 +33,13 @@ export interface KnowledgeArticle {
   readMinutes: number;
   title: I18nText;
   excerpt: I18nText;
+  /**
+   * Full article body, shown on the article detail page. Paragraphs are
+   * separated by a blank line ("\n\n"). Optional so existing articles that
+   * only have an excerpt still work — the detail page falls back to
+   * showing the excerpt if `content` is missing.
+   */
+  content?: I18nText;
 }
 
 /** A cultivar/variety option for a crop (e.g. durian Monthong). */
